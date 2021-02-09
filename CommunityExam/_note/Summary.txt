@@ -1,0 +1,17 @@
+* 기본 키 할당 전략
+  - 스프링 부트 1.x 는 기본 키 할당 전략이 IDENTITY 지만, 2.x 부터는 TABLE 로 변경 되어 명시적으로 사용을 권함
+  - IDENTITY :
+  - Table :
+  - Sequence :
+  - Auto :
+
+* Enumerated
+  - 디폴트 값은 , 실수 방지를 위해 String 으로 사용을 권함
+
+* 즉시로딩과 지연로딩
+  - 디폴트 값은
+  - Eager : 매핑 된 엔티티를 조회할 경우 관련 엔티티 모두 즉시 조회 함
+  - Lazy : 매핑 된 엔티티를 실제 사용될 때 조회
+
+* 자바8 LocalDateTime
+  - 기존 Date 와 Calendar
