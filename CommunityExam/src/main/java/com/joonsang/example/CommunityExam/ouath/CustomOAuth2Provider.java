@@ -4,6 +4,11 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 
+/**
+ * 시큐리티 스타터에서 CommonOAuth2Provider 클래스를 확인해보면 범용적인 소셜 미디어 (google, facebook, github 등) 설정 제공
+ * - org.springframework.security.config.oauth2.client
+ * - kakao 같은 경우, 시큐리티 스타터에서 설정을 제공하지 않아 코드 따로 추가
+ */
 public enum CustomOAuth2Provider {
 
     KAKAO {

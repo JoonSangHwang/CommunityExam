@@ -48,10 +48,17 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     private User getUser(User user, HttpSession session) {
-        if(user == null) {
+        if (user == null) {
+
             try {
-                OAuth2AuthenticationToken authentication = (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+                // SecurityContextHolder 에서 OAuth2AuthenticationToken 을 가져옴
+                OAuth2AuthenticationToken authentication
+                        = (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+
+                // 토큰 객체에서 가져온 개인정보를 Map 에 담음
                 Map<String, Object> map = authentication.getPrincipal().getAttributes();
+
+                // 토큰 객체에서 가져온 정보로 getAuthorizedClientRegistrationId() 을 통해, 인증 된 소셜 미디어를 알 수 있음
                 User convertUser = convertUser(authentication.getAuthorizedClientRegistrationId(), map);
 
                 user = userRepository.findByEmail(convertUser.getEmail());

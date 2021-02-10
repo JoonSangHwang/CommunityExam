@@ -74,7 +74,7 @@
                 boardType: $('#board_type option:selected').val()
             });
             $.ajax({
-                       url: "http://localhost:8081/api/boards",
+                       url: "http://localhost:50/api/boards",
                        type: "POST",
                        data: jsonData,
                        contentType: "application/json",
@@ -102,7 +102,7 @@
                 createdDate: $('#board_create_date').val()
             });
             $.ajax({
-                       url: "http://localhost:8081/api/boards/" + $('#board_idx').val(),
+                       url: "http://localhost:50/api/boards/" + $('#board_idx').val(),
                        type: "PUT",
                        data: jsonData,
                        contentType: "application/json",
@@ -118,7 +118,7 @@
         });
         $('#delete').click(function () {
             $.ajax({
-                       url: "http://localhost:8081/api/boards/" + $('#board_idx').val(),
+                       url: "http://localhost:50/api/boards/" + $('#board_idx').val(),
                        type: "DELETE",
                        success: function () {
                            alert('삭제 성공!');
