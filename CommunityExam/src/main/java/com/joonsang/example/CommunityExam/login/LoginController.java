@@ -5,6 +5,8 @@ import com.joonsang.example.CommunityExam.entity.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class LoginController {
 
@@ -15,8 +17,10 @@ public class LoginController {
 
     @GetMapping("/loginSuccess")
     public String loginSuccess(@SocialUser User user) {
+        System.out.println("OAuth 2.0 complete !!!!!!!");
         return "redirect:/board/list";
     }
+
 
     @GetMapping("/test")
     public User aa(@SocialUser User user) {

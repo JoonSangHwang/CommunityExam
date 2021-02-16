@@ -20,7 +20,9 @@ public class BoardController {
     }
 
     @GetMapping({"", "/"})
-    public String board(@SocialUser User user, @RequestParam(value = "idx", defaultValue = "0") Long idx, Model model) {
+    public String board(@SocialUser User user,
+                        @RequestParam(value = "idx", defaultValue = "0") Long idx,
+                        Model model) {
         model.addAttribute("board", boardService.findBoardByIdx(idx));
         return "/board/form";
     }

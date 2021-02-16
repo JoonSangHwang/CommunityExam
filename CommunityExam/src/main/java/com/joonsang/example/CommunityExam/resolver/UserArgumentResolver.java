@@ -41,9 +41,11 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     private UserRepository userRepository;
 
     /**
-     * 지원 여부 판단
+     * HandlerMethodArgumentResolver 인터페이스의 지원 여부 판단
+     *
      * - 파라미터에 어노테이션 @SocialUser 인 경우 true
      * - 파라미터 클래스 타입이 User.class 인 경우 true
+     * - return true 일 경우, resolveArgument() 실행
      */
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -53,10 +55,11 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     /**
-     * 유저 정보를 가져와 파라미터에 리졸브
-     * 1. 세션에서 가져옴
-     * 2. 없으면 SecurityContextHolder
-     * 3. 없으면 DB 조회 후, User 객체 반환 (질문: save 를 할 필요가 있는건가 ?)
+     * 해당 파라미터 객체에 바인딩(리졸브)
+     *
+     * 1. 유저 정보를 세션에서 가져옴
+     * 2. 없으면 ? 유저정보를 SecurityContextHolder 에서 가져옴
+     * 3. 없으면 ? 유저정보를 DB 에서 조회하여 User 객체를 반환 (질문: save 를 할 필요가 있는건가 ?)
      */
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
@@ -72,16 +75,13 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     /**
-     * 유저 정보를 가져옴
-     * 1. Session
-     * 2. SecurityContextHolder
+     * User 타입의 객체를 반환하기 위해 유저 정보 조회
      */
     private User getUser(User user, HttpSession session) {
         // 세션에 정보가 없을 경우...
         if (user == null) {
             try {
                 // SecurityContextHolder 에서 OAuth2AuthenticationToken 을 가져옴
-                //
                 OAuth2AuthenticationToken authentication
                         = (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
@@ -99,13 +99,13 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
                     user = userRepository.save(convertUser);
                 }
 
-
                 setRoleIfNotSame(user, authentication, map);
                 session.setAttribute("user", user);
             } catch (ClassCastException e) {
                 return user;
             }
         }
+
         return user;
     }
 
@@ -140,14 +140,14 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     /**
+     * 인증된 토큰이 권한을 가지고 있는지 체크
      *
-     * @param user              DB 유저 정보
-     * @param authentication    SecurityContextHolder 유저 정보
-     * @param map               유저 정보
+     * @param user    DB 유저 정보
+     * @param auth    SecurityContextHolder 유저 정보
+     * @param map     유저 정보
      */
-    private void setRoleIfNotSame(User user, OAuth2AuthenticationToken authentication, Map<String, Object> map) {
-        if (!authentication.getAuthorities()
-                        .contains(new SimpleGrantedAuthority(user.getSocialType().getRoleType()))) {
+    private void setRoleIfNotSame(User user, OAuth2AuthenticationToken auth, Map<String, Object> map) {
+        if (!auth.getAuthorities().contains(new SimpleGrantedAuthority(user.getSocialType().getRoleType()))) {
             SecurityContextHolder
                     .getContext()
                     .setAuthentication(new UsernamePasswordAuthenticationToken(map, "N/A", AuthorityUtils.createAuthorityList(user.getSocialType().getRoleType())));
