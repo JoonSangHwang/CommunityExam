@@ -36,7 +36,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
         http
                 .authorizeRequests()
-                .antMatchers("/", "/oauth2/**", "/login/**", "/css/**", "/images/**", "/js/**", "/console/**").permitAll()
+                .antMatchers("/",
+                        "/oauth2/**",
+                        "/login/**",
+                        "/css/**",
+                        "/images/**",
+                        "/js/**",
+                        "/console/**").permitAll()
                 .antMatchers("/facebook").hasAuthority(FACEBOOK.getRoleType())
                 .antMatchers("/google").hasAuthority(GOOGLE.getRoleType())
                 .antMatchers("/kakao").hasAuthority(KAKAO.getRoleType())
@@ -46,10 +52,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .oauth2Login()
                 .defaultSuccessUrl("/loginSuccess")         // 로그인 성공 시, 이동 할 URL
                 .failureUrl("/loginFailure")                // 로그인 실패 시, 이동 할 URL
-                .userInfoEndpoint()                         // OAuth 2.0 로그인 성공 이후 사용자 정보를 가져올 때의 설정들을 담당
-                .userService(customOAuth2UserService)       // 로그인 성공 후, 후속 조치 UserService 인터페이스 [리소스 서버에서 받아온 사용자 정보를 핸들링]
+                .userInfoEndpoint()                         // 로그인 성공 후, 로그인 기능에 대한 여러 설정의 진입점
+                .userService(customOAuth2UserService)       // 로그인 성공 후, 후속 조치 UserService 인터페이스 구현체 [리소스 서버에서 받아온 사용자 정보를 핸들링]
         .and()
-                .headers().frameOptions().disable()         // H2-console 화면을 사용하기 위해 해당 옵션은 disable()
+//                .headers().frameOptions().disable()         // H2-console 화면을 사용하기 위해 해당 옵션은 disable()
         .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))

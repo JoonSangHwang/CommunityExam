@@ -1,5 +1,6 @@
 package com.joonsang.example.CommunityExam.board;
 
+import com.joonsang.example.CommunityExam.annotation.SocialUser;
 import com.joonsang.example.CommunityExam.entity.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -19,7 +20,7 @@ public class BoardController {
     }
 
     @GetMapping({"", "/"})
-    public String board(@RequestParam(value = "idx", defaultValue = "0") Long idx, Model model) {
+    public String board(@SocialUser User user, @RequestParam(value = "idx", defaultValue = "0") Long idx, Model model) {
         model.addAttribute("board", boardService.findBoardByIdx(idx));
         return "/board/form";
     }

@@ -9,11 +9,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-import java.time.LocalDateTime;
 import java.util.stream.IntStream;
 
 @SpringBootApplication
+@EnableJpaAuditing
 public class CommunityExamApplication {
 
 	public static void main(String[] args) {
@@ -28,11 +29,13 @@ public class CommunityExamApplication {
 	public CommandLineRunner runner(UserRepository userRepository, BoardRepository boardRepository) {
 		return (args) -> {
 			User user = userRepository.save(User.builder()
-					.name("havi")
+					.name("abc")
 					.password("test")
-					.email("havi@gmail.com")
-					.createdDate(LocalDateTime.now())
+					.picture("test")
+					.email("test@gmail.com")
 					.build());
+
+
 
 			IntStream.rangeClosed(1, 200).forEach(index ->
 					boardRepository.save(Board.builder()
@@ -40,8 +43,8 @@ public class CommunityExamApplication {
 							.subTitle("순서"+index)
 							.content("컨텐츠")
 							.boardType(BoardType.free)
-							.createdDate(LocalDateTime.now())
-							.updatedDate(LocalDateTime.now())
+							.createdBy("Admin")
+							.modifiedBy("Admin")
 							.user(user).build())
 			);
 		};
