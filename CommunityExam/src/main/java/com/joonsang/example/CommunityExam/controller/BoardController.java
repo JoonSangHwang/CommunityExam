@@ -2,13 +2,12 @@ package com.joonsang.example.CommunityExam.controller;
 
 import com.joonsang.example.CommunityExam.annotation.SocialUser;
 import com.joonsang.example.CommunityExam.service.BoardService;
-import com.joonsang.example.CommunityExam.entity.User;
+import com.joonsang.example.CommunityExam.entity.Account;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -20,7 +19,7 @@ public class BoardController {
     }
 
     @GetMapping("/board")
-    public String board(@SocialUser User user,
+    public String board(@SocialUser Account account,
                         @RequestParam(value = "idx", defaultValue = "0") Long idx,
                         Model model) {
         model.addAttribute("board", boardService.findBoardByIdx(idx));

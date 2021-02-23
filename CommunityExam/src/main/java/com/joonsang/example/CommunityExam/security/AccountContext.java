@@ -1,6 +1,6 @@
 package com.joonsang.example.CommunityExam.security;
 
-import com.joonsang.example.CommunityExam.entity.User;
+import com.joonsang.example.CommunityExam.entity.Account;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
@@ -10,14 +10,14 @@ import java.util.Collection;
  */
 public class AccountContext extends org.springframework.security.core.userdetails.User {
 
-    private final User account;
+    private final Account account;
 
-    public AccountContext(User account, Collection<? extends GrantedAuthority> authorities) {
-        super(account.getName(), account.getPassword(), authorities);
+    public AccountContext(Account account, Collection<? extends GrantedAuthority> authorities) {
+        super(account.getNickname(), account.getPassword(), authorities);
         this.account = account;
     }
 
-    public User getAccount() {
+    public Account getAccount() {
         return account;
     }
 }

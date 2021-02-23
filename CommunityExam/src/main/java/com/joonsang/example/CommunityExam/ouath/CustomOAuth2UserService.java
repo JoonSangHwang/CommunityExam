@@ -1,9 +1,9 @@
 package com.joonsang.example.CommunityExam.ouath;
 
-import com.joonsang.example.CommunityExam.entity.User;
+import com.joonsang.example.CommunityExam.entity.Account;
 import com.joonsang.example.CommunityExam.ouath.dto.OAuthAttributes;
 import com.joonsang.example.CommunityExam.ouath.dto.SessionUser;
-import com.joonsang.example.CommunityExam.repository.UserRepository;
+import com.joonsang.example.CommunityExam.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -24,7 +24,7 @@ import java.util.Collections;
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
     private final HttpSession httpSession;
 
     @Override
@@ -46,13 +46,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
         // 저장 또는 수정, (DB 에 정보가 없으면 저장)
-        User user = saveOrUpdate(attributes);
+        Account account = saveOrUpdate(attributes);
 
         // OAuth2UserService 로 가져온 유저 정보를 세션 DTO 에 담음 (노트 OAuth2 2-1 참고)
-        httpSession.setAttribute("user", new SessionUser(user));
+        httpSession.setAttribute("user", new SessionUser(account));
 
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority(user.getSocialType().getRoleType())),
+                Collections.singleton(new SimpleGrantedAuthority(account.getRoleType().getRoleType())),
                 attributes.getAttributes(),             // name 등 속성
                 attributes.getNameAttributeKey());      // PK
     }
@@ -61,15 +61,15 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
      * 사용자 정보가 업데이트 되었을 경우, update 기능 구현
      * - 이름 또는 프로필 사진이 변경 되면 User 엔티티도 반영
      */
-    private User saveOrUpdate(OAuthAttributes attributes) {
+    private Account saveOrUpdate(OAuthAttributes attributes) {
         try {
-            userRepository.findByEmail(attributes.getEmail()).getEmail();
+            accountRepository.findByEmail(attributes.getEmail()).getEmail();
         } catch (NullPointerException e) {
-            User newUser = attributes.toEntity();
-            return userRepository.save(newUser);
+            Account newAccount = attributes.toEntity();
+            return accountRepository.save(newAccount);
         }
 
-        User a = attributes.toEntity();
+        Account a = attributes.toEntity();
         return a;
     }
 }

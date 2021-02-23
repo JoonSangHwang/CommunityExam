@@ -24,7 +24,7 @@ public class Board extends BaseEntity implements Serializable {
     @Column private BoardType boardType;
 
     @OneToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Account account;
     //== Property
 
 
@@ -32,12 +32,12 @@ public class Board extends BaseEntity implements Serializable {
     }
 
     @Builder
-    public Board(String title, String subTitle, String content, BoardType boardType, User user, String createdBy, String modifiedBy) {
+    public Board(String title, String subTitle, String content, BoardType boardType, Account account, String createdBy, String modifiedBy) {
         super(createdBy, modifiedBy);
         this.title = title;
         this.subTitle = subTitle;
         this.content = content;
         this.boardType = boardType;
-        this.user = user;
+        this.account = account;
     }
 }

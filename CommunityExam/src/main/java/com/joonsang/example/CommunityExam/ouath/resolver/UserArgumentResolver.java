@@ -1,10 +1,10 @@
 package com.joonsang.example.CommunityExam.ouath.resolver;
 
 import com.joonsang.example.CommunityExam.annotation.SocialUser;
-import com.joonsang.example.CommunityExam.entity.User;
+import com.joonsang.example.CommunityExam.entity.Account;
+import com.joonsang.example.CommunityExam.entity.enumType.roleType;
 import com.joonsang.example.CommunityExam.ouath.dto.SessionUser;
-import com.joonsang.example.CommunityExam.entity.enumType.SocialType;
-import com.joonsang.example.CommunityExam.repository.UserRepository;
+import com.joonsang.example.CommunityExam.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -26,7 +26,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import static com.joonsang.example.CommunityExam.entity.enumType.SocialType.*;
+import static com.joonsang.example.CommunityExam.entity.enumType.roleType.*;
 
 /**
  * 조건에 맞는 경우(=supportsParameter)의 메소드가 있다면, 해당 메소드의 파라미터로 리졸브 !!
@@ -37,7 +37,7 @@ import static com.joonsang.example.CommunityExam.entity.enumType.SocialType.*;
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Autowired
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
 
     /**
      * HandlerMethodArgumentResolver 인터페이스의 지원 여부 판단
@@ -49,7 +49,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean isLoginUserAnnotation = parameter.getParameterAnnotation(SocialUser.class) != null;
-        boolean isUserClass = User.class.equals(parameter.getParameterType());
+        boolean isUserClass = Account.class.equals(parameter.getParameterType());
         return isLoginUserAnnotation && isUserClass;
     }
 
@@ -67,18 +67,18 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
         // 세션에서 유저 정보를 가져옴
         SessionUser sessionUser = (SessionUser) session.getAttribute("user");
-        User user = new User(sessionUser.getName(), sessionUser.getEmail(), sessionUser.getPicture());
+        Account account = new Account(sessionUser.getName(), sessionUser.getEmail(), sessionUser.getPicture());
 
         // User 타입의 객체 생성
-        return getUser(user, session);
+        return getUser(account, session);
     }
 
     /**
      * User 타입의 객체를 반환하기 위해 유저 정보 조회
      */
-    private User getUser(User user, HttpSession session) {
+    private Account getUser(Account account, HttpSession session) {
         // 세션에 정보가 없을 경우...
-        if (user == null) {
+        if (account == null) {
             try {
                 // SecurityContextHolder 에서 OAuth2AuthenticationToken 을 가져옴
                 OAuth2AuthenticationToken authentication
@@ -88,27 +88,27 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
                 Map<String, Object> map = authentication.getPrincipal().getAttributes();
 
                 // SecurityContextHolder 에서 가져온 토큰 정보로 getAuthorizedClientRegistrationId() 을 통해, 인증 된 소셜 미디어를 알 수 있음
-                User convertUser = convertUser(authentication.getAuthorizedClientRegistrationId(), map);
+                Account convertAccount = convertUser(authentication.getAuthorizedClientRegistrationId(), map);
 
                 // SecurityContextHolder 에서 가져온 토큰 정보를 User 객체로 변환 후, DB 에서 조회
-                user = userRepository.findByEmail(convertUser.getEmail());
+                account = accountRepository.findByEmail(convertAccount.getEmail());
 
                 // SecurityContextHolder 에서 찾은 정보가 DB 에 없다면, 저장 !!
-                if (user == null) {
-                    user = userRepository.save(convertUser);
+                if (account == null) {
+                    account = accountRepository.save(convertAccount);
                 }
 
-                setRoleIfNotSame(user, authentication, map);
-                session.setAttribute("user", user);
+                setRoleIfNotSame(account, authentication, map);
+                session.setAttribute("user", account);
             } catch (ClassCastException e) {
-                return user;
+                return account;
             }
         }
 
-        return user;
+        return account;
     }
 
-    private User convertUser(String authority, Map<String, Object> map) {
+    private Account convertUser(String authority, Map<String, Object> map) {
         if(FACEBOOK.equals(authority))
             return getModernUser(FACEBOOK, map);
         else if("google".equals(authority))
@@ -119,37 +119,35 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
             return null;
     }
 
-    private User getModernUser(SocialType socialType, Map<String, Object> map) {
-        return User.builder()
-                .name(String.valueOf(map.get("name")))
+    private Account getModernUser(roleType roleType, Map<String, Object> map) {
+        return Account.builder()
+                .nickname(String.valueOf(map.get("name")))
                 .email(String.valueOf(map.get("email")))
-                .pincipal(String.valueOf(map.get("id")))
-                .socialType(socialType)
+                .roleType(roleType)
                 .build();
     }
 
-    private User getKaKaoUser(Map<String, Object> map) {
+    private Account getKaKaoUser(Map<String, Object> map) {
         Map<String, String> propertyMap = (HashMap<String, String>) map.get("properties");
-        return User.builder()
-                .name(propertyMap.get("nickname"))
+        return Account.builder()
+                .nickname(propertyMap.get("nickname"))
                 .email(String.valueOf(map.get("kaccount_email")))
-                .pincipal(String.valueOf(map.get("id")))
-                .socialType(KAKAO)
+                .roleType(KAKAO)
                 .build();
     }
 
     /**
      * 인증된 토큰이 권한을 가지고 있는지 체크
      *
-     * @param user    DB 유저 정보
+     * @param account    DB 유저 정보
      * @param auth    SecurityContextHolder 유저 정보
      * @param map     유저 정보
      */
-    private void setRoleIfNotSame(User user, OAuth2AuthenticationToken auth, Map<String, Object> map) {
-        if (!auth.getAuthorities().contains(new SimpleGrantedAuthority(user.getSocialType().getRoleType()))) {
+    private void setRoleIfNotSame(Account account, OAuth2AuthenticationToken auth, Map<String, Object> map) {
+        if (!auth.getAuthorities().contains(new SimpleGrantedAuthority(account.getRoleType().getRoleType()))) {
             SecurityContextHolder
                     .getContext()
-                    .setAuthentication(new UsernamePasswordAuthenticationToken(map, "N/A", AuthorityUtils.createAuthorityList(user.getSocialType().getRoleType())));
+                    .setAuthentication(new UsernamePasswordAuthenticationToken(map, "N/A", AuthorityUtils.createAuthorityList(account.getRoleType().getRoleType())));
         }
     }
 }

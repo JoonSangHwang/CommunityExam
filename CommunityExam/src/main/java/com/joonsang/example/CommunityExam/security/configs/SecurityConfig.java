@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.joonsang.example.CommunityExam.entity.enumType.SocialType.*;
+import static com.joonsang.example.CommunityExam.entity.enumType.roleType.*;
 
 @Configuration
 @EnableWebSecurity
@@ -36,6 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     CustomOAuth2UserService customOAuth2UserService;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     private static final String[] AUTH_WHITELIST = {
             "/docs/**",

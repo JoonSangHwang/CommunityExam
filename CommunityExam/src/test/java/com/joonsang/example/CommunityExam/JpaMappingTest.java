@@ -1,10 +1,10 @@
 package com.joonsang.example.CommunityExam;
 
+import com.joonsang.example.CommunityExam.entity.Account;
 import com.joonsang.example.CommunityExam.repository.BoardRepository;
 import com.joonsang.example.CommunityExam.entity.enumType.BoardType;
 import com.joonsang.example.CommunityExam.entity.Board;
-import com.joonsang.example.CommunityExam.entity.User;
-import com.joonsang.example.CommunityExam.repository.UserRepository;
+import com.joonsang.example.CommunityExam.repository.AccountRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,15 +19,15 @@ public class JpaMappingTest {
     private final String email = "test@gmail.com";
 
     @Autowired
-    UserRepository userRepository;
+    AccountRepository accountRepository;
 
     @Autowired
     BoardRepository boardRepository;
 
     @BeforeEach
     public void init() {
-        User user = userRepository.save(User.builder()
-                .name("havi")
+        Account account = accountRepository.save(Account.builder()
+                .nickname("havi")
                 .password("test")
                 .email(email)
                 .build());
@@ -37,7 +37,7 @@ public class JpaMappingTest {
                 .subTitle("서브 타이틀")
                 .content("컨텐츠")
                 .boardType(BoardType.free)
-                .user(user).build());
+                .account(account).build());
     }
 
     @Test
@@ -46,12 +46,12 @@ public class JpaMappingTest {
 
         System.out.println("email :" + email);
 
-        User user = userRepository.findByEmail(email);
-        assertThat(user.getName(), is("havi"));
-        assertThat(user.getPassword(), is("test"));
-        assertThat(user.getEmail(), is(email));
+        Account account = accountRepository.findByEmail(email);
+        assertThat(account.getNickname(), is("havi"));
+        assertThat(account.getPassword(), is("test"));
+        assertThat(account.getEmail(), is(email));
 
-        Board board = boardRepository.findByUser(user);
+        Board board = boardRepository.findByAccount(account);
         assertThat(board.getTitle(), is(boardTestTitle));
         assertThat(board.getSubTitle(), is("서브 타이틀"));
         assertThat(board.getContent(), is("컨텐츠"));

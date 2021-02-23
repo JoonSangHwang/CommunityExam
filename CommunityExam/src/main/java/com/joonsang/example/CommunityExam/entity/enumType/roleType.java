@@ -3,7 +3,7 @@ package com.joonsang.example.CommunityExam.entity.enumType;
 import lombok.Getter;
 
 @Getter
-public enum SocialType {
+public enum roleType {
 
     FACEBOOK("facebook"),
     GOOGLE("google"),
@@ -14,13 +14,14 @@ public enum SocialType {
     private final String ROLE_PREFIX = "ROLE_";
     private String name;
 
-    SocialType(String name) {
+    roleType(String name) {
         this.name = name;
     }
 
     public String getRoleType() {
         return ROLE_PREFIX + name.toUpperCase();
     }
+
     public boolean isEquals(String authority) {
         return this.getRoleType().equals(authority);
     }

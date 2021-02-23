@@ -66,8 +66,8 @@
     <script th:src="@{/js/jquery.min.js}"></script>
     <script>
         $('.btn_social').click(function () {
-            var socialType = $(this).data('social');
-            location.href="/oauth2/authorization/"+socialType;
+            var roleType = $(this).data('social');
+            location.href="/oauth2/authorization/"+roleType;
         });
     </script>
 

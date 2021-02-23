@@ -1,7 +1,7 @@
 package com.joonsang.example.CommunityExam.controller;
 
 import com.joonsang.example.CommunityExam.annotation.SocialUser;
-import com.joonsang.example.CommunityExam.entity.User;
+import com.joonsang.example.CommunityExam.entity.Account;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -14,7 +14,7 @@ public class LoginController {
     }
 
     @GetMapping("/loginSuccess")
-    public String loginSuccess(@SocialUser User user) {
+    public String loginSuccess(@SocialUser Account account) {
         System.out.println("OAuth 2.0 complete !!!!!!!");
         return "redirect:/board/list";
     }

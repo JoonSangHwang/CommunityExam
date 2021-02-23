@@ -1,10 +1,10 @@
 package com.joonsang.example.CommunityExam;
 
+import com.joonsang.example.CommunityExam.entity.Account;
 import com.joonsang.example.CommunityExam.repository.BoardRepository;
 import com.joonsang.example.CommunityExam.entity.enumType.BoardType;
 import com.joonsang.example.CommunityExam.entity.Board;
-import com.joonsang.example.CommunityExam.entity.User;
-import com.joonsang.example.CommunityExam.repository.UserRepository;
+import com.joonsang.example.CommunityExam.repository.AccountRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,10 +31,10 @@ public class CommunityExamApplication {
 	 * 초기 기초 데이터
 	 */
 	@Bean
-	public CommandLineRunner runner(UserRepository userRepository, BoardRepository boardRepository) {
+	public CommandLineRunner runner(AccountRepository accountRepository, BoardRepository boardRepository) {
 		return (args) -> {
-			User user = userRepository.save(User.builder()
-					.name("abc")
+			Account account = accountRepository.save(Account.builder()
+					.nickname("abc")
 					.password("test")
 					.picture("test")
 					.email("test@gmail.com")
@@ -50,7 +50,7 @@ public class CommunityExamApplication {
 							.boardType(BoardType.free)
 							.createdBy("Admin")
 							.modifiedBy("Admin")
-							.user(user).build())
+							.account(account).build())
 			);
 		};
 	}

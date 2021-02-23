@@ -1,14 +1,14 @@
 package com.joonsang.example.CommunityExam.ouath.dto;
 
-import com.joonsang.example.CommunityExam.entity.User;
+import com.joonsang.example.CommunityExam.entity.Account;
 //import com.joonsang.example.CommunityExam.user.Role;
-import com.joonsang.example.CommunityExam.entity.enumType.SocialType;
+import com.joonsang.example.CommunityExam.entity.enumType.roleType;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Map;
 
-import static com.joonsang.example.CommunityExam.entity.enumType.SocialType.*;
+import static com.joonsang.example.CommunityExam.entity.enumType.roleType.*;
 
 @Getter
 public class OAuthAttributes {
@@ -66,8 +66,8 @@ public class OAuthAttributes {
      * User 엔티티 생성
      * - 초기 가입은 GUEST 권한 부여
      */
-    public User toEntity() {
-        SocialType st = null;
+    public Account toEntity() {
+        roleType st = null;
         switch (socialType) {
             case "facebook":
                 st = FACEBOOK;
@@ -85,11 +85,11 @@ public class OAuthAttributes {
                 break;
         }
 
-        return User.builder()
-                .name(name)
+        return Account.builder()
+                .nickname(name)
                 .email(email)
                 .picture(picture)
-                .socialType(st)
+                .roleType(st)
                 .build();
     }
 }

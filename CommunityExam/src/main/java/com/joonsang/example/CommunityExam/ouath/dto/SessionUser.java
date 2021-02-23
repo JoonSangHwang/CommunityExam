@@ -1,6 +1,6 @@
 package com.joonsang.example.CommunityExam.ouath.dto;
 
-import com.joonsang.example.CommunityExam.entity.User;
+import com.joonsang.example.CommunityExam.entity.Account;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -13,9 +13,9 @@ public class SessionUser implements Serializable {
     private String email;
     private String picture;
 
-    public SessionUser(User user) {
-        this.name = user.getName();
-        this.email = user.getEmail();
-        this.picture = user.getPicture();
+    public SessionUser(Account account) {
+        this.name = account.getNickname();
+        this.email = account.getEmail();
+        this.picture = account.getPicture();
     }
 }

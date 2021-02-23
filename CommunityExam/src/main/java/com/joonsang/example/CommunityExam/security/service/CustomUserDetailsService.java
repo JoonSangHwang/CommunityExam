@@ -1,7 +1,7 @@
 package com.joonsang.example.CommunityExam.security.service;
 
-import com.joonsang.example.CommunityExam.entity.User;
-import com.joonsang.example.CommunityExam.repository.UserRepository;
+import com.joonsang.example.CommunityExam.entity.Account;
+import com.joonsang.example.CommunityExam.repository.AccountRepository;
 import com.joonsang.example.CommunityExam.security.AccountContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,10 +35,10 @@ import java.util.List;
  * 중요한 것은 스프링시큐리티에서 인증사용자 정보를 어떻게 활용하고 있는지의 처리방식과 구조를 명확하게 이해하는 것이 무엇보다 중요합니다
  */
 @Service("userDetailsService")
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
 
     /**
      * 로그인 요청
@@ -48,8 +48,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findByEmail(username);
-        if (user == null) {
+        Account account = accountRepository.findByEmail(username);
+        if (account == null) {
             throw new UsernameNotFoundException("UsernameNotFoundException");
         }
 
@@ -65,7 +65,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
          * 근데 User 는 Entity 클래스로서 일반 객체와 분리해서 사용하는 것이 좀 더 좋은 구조이다.
          * 그래서 AccountContext 안에 User 를 담아놓고 필요시 꺼내어 쓰기 위한 용도로 만들었다.
          */
-        AccountContext accountContext = new AccountContext(user, roles);
+        AccountContext accountContext = new AccountContext(account, roles);
 
         return accountContext;
     }
