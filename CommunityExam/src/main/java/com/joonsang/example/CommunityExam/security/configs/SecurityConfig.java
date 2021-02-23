@@ -1,13 +1,17 @@
-package com.joonsang.example.CommunityExam.config;
+package com.joonsang.example.CommunityExam.security.configs;
 
 import com.joonsang.example.CommunityExam.ouath.CustomOAuth2Provider;
 import com.joonsang.example.CommunityExam.ouath.CustomOAuth2UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
@@ -22,20 +26,42 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.joonsang.example.CommunityExam.user.SocialType.*;
+import static com.joonsang.example.CommunityExam.entity.enumType.SocialType.*;
 
 @Configuration
-@EnableWebSecurity      // 시큐리티 활성화
+@EnableWebSecurity
+@Slf4j
+@Order(0)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     CustomOAuth2UserService customOAuth2UserService;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/docs/**",
+            "/csrf/**",
+            "/webjars/**",
+            "/**swagger**/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/v2/api-docs"
+    };
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
         http
                 .authorizeRequests()
+                .antMatchers(AUTH_WHITELIST).permitAll()
+                .antMatchers("/").permitAll()                   // [페이지] index
+                .antMatchers("/mainPage").permitAll()           // [페이지] 메인
+                .antMatchers("/loginPage").permitAll()          // [페이지] 로그인
+                .antMatchers("/signUpPage").permitAll()         // [페이지] 회원가입
+
+                .antMatchers("/mypage").hasRole("BRONZE")
+                .antMatchers("/messages").hasRole("MANAGER")
+                .antMatchers("/config").hasRole("ADMIN")
                 .antMatchers(
                         "/",
                         "/oauth2/**",
@@ -47,8 +73,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/facebook").hasAuthority(FACEBOOK.getRoleType())
                 .antMatchers("/google").hasAuthority(GOOGLE.getRoleType())
                 .antMatchers("/kakao").hasAuthority(KAKAO.getRoleType())
-                .anyRequest().authenticated()
-        .and()
+                .anyRequest().authenticated();
+
+
+        http
                 // OAuth 2.0 로그인
                 .oauth2Login()
                 .defaultSuccessUrl("/loginSuccess")         // 로그인 성공 시, 이동 할 URL
@@ -63,6 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
                 // Form 로그인
                 .formLogin()
+                .loginPage("/login")
                 .successForwardUrl("/board/list")
         .and()
                 // 로그아웃
@@ -75,6 +104,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(filter, CsrfFilter.class)
                 .csrf().disable();
     }
+
+
+    /**
+     * ignoring 설정
+     *
+     * - 정적 자원 관리
+     * - StaticResourceLocation (CSS / JAVA_SCRIPT / IMAGES / WEB_JARS / favicon 등) 객체는 보안 필터를 안거치도록 설정
+     *
+     * 참고 : permitAll() 같은 메소드는 보안 필터를 거쳐 인증을 받을 필요가 없다고 인가를 받는 것. ignoring() 은 보안필터 자체를 안거침
+     */
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        // 디버그 시, 정적 자원은 필터가 0개 인걸 확인 할 수 있음
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
+
+
+
 
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository(OAuth2ClientProperties oAuth2ClientProperties, @Value("${spring.security.oauth2.client.registration.kakao.clientId}") String kakaoClientId) {

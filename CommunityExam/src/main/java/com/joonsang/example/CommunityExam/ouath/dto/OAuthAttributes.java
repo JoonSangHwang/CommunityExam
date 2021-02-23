@@ -2,13 +2,13 @@ package com.joonsang.example.CommunityExam.ouath.dto;
 
 import com.joonsang.example.CommunityExam.entity.User;
 //import com.joonsang.example.CommunityExam.user.Role;
-import com.joonsang.example.CommunityExam.user.SocialType;
+import com.joonsang.example.CommunityExam.entity.enumType.SocialType;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Map;
 
-import static com.joonsang.example.CommunityExam.user.SocialType.*;
+import static com.joonsang.example.CommunityExam.entity.enumType.SocialType.*;
 
 @Getter
 public class OAuthAttributes {

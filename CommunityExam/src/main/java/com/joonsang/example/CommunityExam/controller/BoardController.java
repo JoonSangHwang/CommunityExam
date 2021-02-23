@@ -1,6 +1,7 @@
-package com.joonsang.example.CommunityExam.board;
+package com.joonsang.example.CommunityExam.controller;
 
 import com.joonsang.example.CommunityExam.annotation.SocialUser;
+import com.joonsang.example.CommunityExam.service.BoardService;
 import com.joonsang.example.CommunityExam.entity.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/board")
 public class BoardController {
     private final BoardService boardService;
 
@@ -19,7 +19,7 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-    @GetMapping({"", "/"})
+    @GetMapping("/board")
     public String board(@SocialUser User user,
                         @RequestParam(value = "idx", defaultValue = "0") Long idx,
                         Model model) {
@@ -27,7 +27,7 @@ public class BoardController {
         return "/board/form";
     }
 
-    @GetMapping("/list")
+    @GetMapping("/board/list")
     public String list(@PageableDefault Pageable pageable, Model model) {
         model.addAttribute("boardList", boardService.findBoardList(pageable));
         return "/board/list";

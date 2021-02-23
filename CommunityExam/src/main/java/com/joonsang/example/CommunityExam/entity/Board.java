@@ -1,13 +1,11 @@
 package com.joonsang.example.CommunityExam.entity;
 
-import com.joonsang.example.CommunityExam.board.BoardType;
+import com.joonsang.example.CommunityExam.entity.enumType.BoardType;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter

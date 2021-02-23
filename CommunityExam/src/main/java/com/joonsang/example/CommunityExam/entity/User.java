@@ -1,7 +1,7 @@
 package com.joonsang.example.CommunityExam.entity;
 
 //import com.joonsang.example.CommunityExam.user.Role;
-import com.joonsang.example.CommunityExam.user.SocialType;
+import com.joonsang.example.CommunityExam.entity.enumType.SocialType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +18,7 @@ public class User extends BaseTimeEntity implements Serializable {
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column private Long idx;
 
+        @Column private String userId;
         @Column private String name;
         @Column private String password;
         @Column private String email;
@@ -30,7 +31,8 @@ public class User extends BaseTimeEntity implements Serializable {
 
 
         @Builder
-        public User(String name, String password, String email, String pincipal, String picture, SocialType socialType) {
+        public User(String userId, String name, String password, String email, String pincipal, String picture, SocialType socialType) {
+                this.userId = userId;
                 this.name = name;
                 this.password = password;
                 this.email = email;

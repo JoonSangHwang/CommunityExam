@@ -1,18 +1,16 @@
-package com.joonsang.example.CommunityExam.login;
+package com.joonsang.example.CommunityExam.controller;
 
 import com.joonsang.example.CommunityExam.annotation.SocialUser;
 import com.joonsang.example.CommunityExam.entity.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.servlet.http.HttpSession;
-
 @Controller
 public class LoginController {
 
-    @GetMapping("/login")
+    @GetMapping("/loginPage")
     public String login() {
-        return "login";
+        return "login/loginPage";
     }
 
     @GetMapping("/loginSuccess")
@@ -22,8 +20,4 @@ public class LoginController {
     }
 
 
-    @GetMapping("/test")
-    public User aa(@SocialUser User user) {
-        return user;
-    }
 }

@@ -1,10 +1,10 @@
-package com.joonsang.example.CommunityExam.resolver;
+package com.joonsang.example.CommunityExam.ouath.resolver;
 
 import com.joonsang.example.CommunityExam.annotation.SocialUser;
 import com.joonsang.example.CommunityExam.entity.User;
 import com.joonsang.example.CommunityExam.ouath.dto.SessionUser;
-import com.joonsang.example.CommunityExam.user.SocialType;
-import com.joonsang.example.CommunityExam.user.UserRepository;
+import com.joonsang.example.CommunityExam.entity.enumType.SocialType;
+import com.joonsang.example.CommunityExam.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -21,13 +21,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import static com.joonsang.example.CommunityExam.user.SocialType.*;
+import static com.joonsang.example.CommunityExam.entity.enumType.SocialType.*;
 
 /**
  * 조건에 맞는 경우(=supportsParameter)의 메소드가 있다면, 해당 메소드의 파라미터로 리졸브 !!

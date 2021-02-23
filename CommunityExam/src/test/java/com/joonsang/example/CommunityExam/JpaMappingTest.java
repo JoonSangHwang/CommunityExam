@@ -1,20 +1,13 @@
 package com.joonsang.example.CommunityExam;
 
-import com.joonsang.example.CommunityExam.board.BoardRepository;
-import com.joonsang.example.CommunityExam.board.BoardType;
+import com.joonsang.example.CommunityExam.repository.BoardRepository;
+import com.joonsang.example.CommunityExam.entity.enumType.BoardType;
 import com.joonsang.example.CommunityExam.entity.Board;
 import com.joonsang.example.CommunityExam.entity.User;
-import com.joonsang.example.CommunityExam.user.UserRepository;
-import org.junit.Before;
+import com.joonsang.example.CommunityExam.repository.UserRepository;
 import org.junit.jupiter.api.*;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -37,7 +30,6 @@ public class JpaMappingTest {
                 .name("havi")
                 .password("test")
                 .email(email)
-                .createdDate(LocalDateTime.now())
                 .build());
 
         boardRepository.save(Board.builder()
@@ -45,8 +37,6 @@ public class JpaMappingTest {
                 .subTitle("서브 타이틀")
                 .content("컨텐츠")
                 .boardType(BoardType.free)
-                .createdDate(LocalDateTime.now())
-                .updatedDate(LocalDateTime.now())
                 .user(user).build());
     }
 

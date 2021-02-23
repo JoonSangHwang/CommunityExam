@@ -1,4 +1,4 @@
-package com.joonsang.example.CommunityExam.user;
+package com.joonsang.example.CommunityExam.repository;
 
 import com.joonsang.example.CommunityExam.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

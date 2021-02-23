@@ -1,4 +1,4 @@
-package com.joonsang.example.CommunityExam.board;
+package com.joonsang.example.CommunityExam.repository;
 
 import com.joonsang.example.CommunityExam.entity.Board;
 import com.joonsang.example.CommunityExam.entity.User;

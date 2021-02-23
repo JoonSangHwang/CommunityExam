@@ -3,7 +3,7 @@ package com.joonsang.example.CommunityExam.ouath;
 import com.joonsang.example.CommunityExam.entity.User;
 import com.joonsang.example.CommunityExam.ouath.dto.OAuthAttributes;
 import com.joonsang.example.CommunityExam.ouath.dto.SessionUser;
-import com.joonsang.example.CommunityExam.user.UserRepository;
+import com.joonsang.example.CommunityExam.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

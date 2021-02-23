@@ -1,4 +1,4 @@
-package com.joonsang.example.CommunityExam.board;
+package com.joonsang.example.CommunityExam.entity.enumType;
 
 import lombok.Getter;
 import lombok.Setter;

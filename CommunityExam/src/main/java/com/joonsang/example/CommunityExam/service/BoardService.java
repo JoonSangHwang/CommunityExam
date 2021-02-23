@@ -1,6 +1,7 @@
-package com.joonsang.example.CommunityExam.board;
+package com.joonsang.example.CommunityExam.service;
 
 import com.joonsang.example.CommunityExam.entity.Board;
+import com.joonsang.example.CommunityExam.repository.BoardRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

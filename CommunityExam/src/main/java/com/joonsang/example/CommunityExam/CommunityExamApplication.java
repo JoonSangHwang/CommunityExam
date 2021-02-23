@@ -1,10 +1,10 @@
 package com.joonsang.example.CommunityExam;
 
-import com.joonsang.example.CommunityExam.board.BoardRepository;
-import com.joonsang.example.CommunityExam.board.BoardType;
+import com.joonsang.example.CommunityExam.repository.BoardRepository;
+import com.joonsang.example.CommunityExam.entity.enumType.BoardType;
 import com.joonsang.example.CommunityExam.entity.Board;
 import com.joonsang.example.CommunityExam.entity.User;
-import com.joonsang.example.CommunityExam.user.UserRepository;
+import com.joonsang.example.CommunityExam.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,6 +20,11 @@ public class CommunityExamApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CommunityExamApplication.class, args);
 	}
+
+
+
+
+
 
 
 	/**
