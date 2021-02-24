@@ -8,6 +8,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -26,7 +28,7 @@ public class BoardController {
         return "/board/form";
     }
 
-    @GetMapping("/board/list")
+    @RequestMapping(value = "/board/list", method= {RequestMethod.GET, RequestMethod.POST})
     public String list(@PageableDefault Pageable pageable, Model model) {
         model.addAttribute("boardList", boardService.findBoardList(pageable));
         return "/board/list";

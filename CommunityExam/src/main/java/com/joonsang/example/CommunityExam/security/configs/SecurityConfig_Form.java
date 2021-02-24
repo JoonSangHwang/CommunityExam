@@ -11,18 +11,18 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-@Configuration
-@EnableWebSecurity      // 시큐리티 활성화
-@Slf4j
-@Order(2)
-public class SecurityConfig_Form extends WebSecurityConfigurerAdapter {
-
+//@Configuration
+//@EnableWebSecurity      // 시큐리티 활성화
+//@Slf4j
+//@Order(2)
+//public class SecurityConfig_Form extends WebSecurityConfigurerAdapter {
+//
 //    @Autowired
 //    private UserDetailsService userDetailsService;
-
-
+//
+//
 //    @Override
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 //        auth.userDetailsService(userDetailsService);
 //    }
-}
+//}

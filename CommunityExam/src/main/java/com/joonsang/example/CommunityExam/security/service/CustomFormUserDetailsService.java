@@ -1,6 +1,7 @@
 package com.joonsang.example.CommunityExam.security.service;
 
 import com.joonsang.example.CommunityExam.entity.Account;
+import com.joonsang.example.CommunityExam.exception.UserIdNotFoundException;
 import com.joonsang.example.CommunityExam.repository.AccountRepository;
 import com.joonsang.example.CommunityExam.security.AccountContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ import java.util.List;
  * 중요한 것은 스프링시큐리티에서 인증사용자 정보를 어떻게 활용하고 있는지의 처리방식과 구조를 명확하게 이해하는 것이 무엇보다 중요합니다
  */
 @Service("userDetailsService")
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomFormUserDetailsService implements UserDetailsService {
 
     @Autowired
     private AccountRepository accountRepository;
@@ -46,16 +47,16 @@ public class CustomUserDetailsService implements UserDetailsService {
      * - AccountContext 클래스에서 UserDetails 객체를 반환 하도록 함
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 
-        Account account = accountRepository.findByEmail(username);
+        Account account = accountRepository.findByUserId(userId);
         if (account == null) {
-            throw new UsernameNotFoundException("UsernameNotFoundException");
+            throw new UserIdNotFoundException();
         }
 
         // 권한 정보 생성
         List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority("BRONZE"));
+        roles.add(new SimpleGrantedAuthority(account.getRoleType().getName()));
 
         /**
          * AccountContext : 유저 정보 (UserDetails 인터페이스를 사용하여 시큐리티가 구현 된 User 객체를 사용할 수 있다.)

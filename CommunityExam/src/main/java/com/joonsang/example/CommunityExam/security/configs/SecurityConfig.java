@@ -2,6 +2,7 @@ package com.joonsang.example.CommunityExam.security.configs;
 
 import com.joonsang.example.CommunityExam.ouath.CustomOAuth2Provider;
 import com.joonsang.example.CommunityExam.ouath.CustomOAuth2UserService;
+import com.joonsang.example.CommunityExam.security.provider.CustomFormProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,20 +11,26 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationDetailsSource;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.*;
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -36,10 +43,13 @@ import static com.joonsang.example.CommunityExam.entity.enumType.roleType.*;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    CustomOAuth2UserService customOAuth2UserService;
+    private CustomOAuth2UserService customOAuth2UserService;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private AuthenticationDetailsSource customAuthenticationDetailsSource;
+
+    @Autowired
+    AuthenticationProvider customFormProvider;
 
     private static final String[] AUTH_WHITELIST = {
             "/docs/**",
@@ -55,6 +65,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
+        filter.setEncoding("UTF-8");
+        filter.setForceEncoding(true);
+
+        http
+                .addFilterBefore(filter, CsrfFilter.class)                 // 커스텀 필터 추가 (Default: UsernamePasswordAuthenticationFilter 보다 먼저 실행된다)
+                .csrf().disable();
+
         http
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
@@ -62,6 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/mainPage").permitAll()           // [페이지] 메인
                 .antMatchers("/loginPage").permitAll()          // [페이지] 로그인
                 .antMatchers("/signUpPage").permitAll()         // [페이지] 회원가입
+                .antMatchers("/signUp").permitAll()         // [페이지] 회원가입
 
                 .antMatchers("/mypage").hasRole("BRONZE")
                 .antMatchers("/messages").hasRole("MANAGER")
@@ -81,32 +99,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
         http
-                // OAuth 2.0 로그인
-                .oauth2Login()
-                .defaultSuccessUrl("/loginSuccess")         // 로그인 성공 시, 이동 할 URL
-                .failureUrl("/loginFailure")                // 로그인 실패 시, 이동 할 URL
-                .userInfoEndpoint()                         // 로그인 성공 후, 로그인 기능에 대한 여러 설정의 진입점
-                .userService(customOAuth2UserService)       // 로그인 성공 후, 후속 조치 UserService 인터페이스 구현체 [리소스 서버에서 받아온 사용자 정보를 핸들링]
-        .and()
+//                // OAuth 2.0 로그인
+//                .oauth2Login()
+//                .defaultSuccessUrl("/loginSuccess")         // 로그인 성공 시, 이동 할 URL
+//                .failureUrl("/loginFailure")                // 로그인 실패 시, 이동 할 URL
+//                .userInfoEndpoint()                         // 로그인 성공 후, 로그인 기능에 대한 여러 설정의 진입점
+//                .userService(customOAuth2UserService)       // 로그인 성공 후, 후속 조치 UserService 인터페이스 구현체 [리소스 서버에서 받아온 사용자 정보를 핸들링]
+//        .and()
 //                .headers().frameOptions().disable()         // H2-console 화면을 사용하기 위해 해당 옵션은 disable()
-        .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-        .and()
+//        .and()
+//                .exceptionHandling()
+//                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+//        .and()
                 // Form 로그인
                 .formLogin()
-                .loginPage("/login")
-                .successForwardUrl("/board/list")
-        .and()
-                // 로그아웃
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")          // 로그아웃 성공 시, 이동 할 URL
-                .deleteCookies("JSESSIONID")    // 쿠키 삭제
-                .invalidateHttpSession(true)
-        .and()
-                .addFilterBefore(filter, CsrfFilter.class)
-                .csrf().disable();
+                .loginPage("/loginPage")
+                .loginProcessingUrl("/loginForm")                          // Form 태그의 Action URL
+                .authenticationDetailsSource(customAuthenticationDetailsSource)   // username, password 이외에 추가 파라미터 처리
+                .successForwardUrl("/mainPage")
+//        .and()
+//                // 로그아웃
+//                .logout()
+//                .logoutUrl("/logout")
+//                .logoutSuccessUrl("/")          // 로그아웃 성공 시, 이동 할 URL
+//                .deleteCookies("JSESSIONID")    // 쿠키 삭제
+//                .invalidateHttpSession(true)
+        ;
     }
 
 
@@ -122,6 +140,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         // 디버그 시, 정적 자원은 필터가 0개 인걸 확인 할 수 있음
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
+
+
+
+
+
+
+    /**
+     * AuthenticationManagerBuilder 를 통해 인증 객체를 만들 수 있도록 제공
+     *
+     * - AuthenticationProvider 설정
+     * - Security 인증 시, AuthenticationManager 가 인증을 AuthenticationProvider 에게 위임
+     * - AuthenticationProvider 는 인증 시, CustomFormProvider 를 참조하도록 설정 함
+     * - CustomFormProvider 는 DB 에서 사용자를 조회하여 인증을 진행하려는 목적
+     */
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(customFormProvider);
     }
 
 

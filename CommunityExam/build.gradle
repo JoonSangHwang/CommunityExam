@@ -20,7 +20,6 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'junit:junit:4.12'
@@ -36,6 +35,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.security:spring-security-oauth2-jose'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
+}
+
+
+// thymeleaf
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'			// 시큐리티 사용
 }
 
 test {

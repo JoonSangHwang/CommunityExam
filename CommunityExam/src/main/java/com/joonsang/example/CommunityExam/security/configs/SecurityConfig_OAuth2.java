@@ -7,16 +7,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-@Configuration
-@EnableWebSecurity
-@Slf4j
-@Order(1)
-public class SecurityConfig_OAuth2 extends WebSecurityConfigurerAdapter {
-
-
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-    }
-
-}
+//@Configuration
+//@EnableWebSecurity
+//@Slf4j
+//@Order(1)
+//public class SecurityConfig_OAuth2 extends WebSecurityConfigurerAdapter {
+//
+//
+//
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//    }
+//
+//}

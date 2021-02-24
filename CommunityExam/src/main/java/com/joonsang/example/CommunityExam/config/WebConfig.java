@@ -2,10 +2,14 @@ package com.joonsang.example.CommunityExam.config;
 
 import com.joonsang.example.CommunityExam.listener.SessionListener;
 import com.joonsang.example.CommunityExam.ouath.resolver.UserArgumentResolver;
+import com.joonsang.example.CommunityExam.security.common.CustomAuthenticationDetailsSource;
+import com.joonsang.example.CommunityExam.security.provider.CustomFormProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationDetailsSource;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.*;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
@@ -52,6 +56,20 @@ public class WebConfig implements WebMvcConfigurer {
 
 
     /**
+     * Bean AuthenticationProvider
+     */
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        return new CustomFormProvider(passwordEncoder());
+    }
+
+    @Bean
+    public AuthenticationDetailsSource authenticationDetailsSource() {
+        return new CustomAuthenticationDetailsSource();
+    }
+
+
+    /**
      * Password Encryption Processing
      */
     @Bean
@@ -74,4 +92,5 @@ public class WebConfig implements WebMvcConfigurer {
         PasswordEncoder passwordEncoder = new DelegatingPasswordEncoder(idForEncode, encoders);
         return passwordEncoder;
     }
+
 }

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
 <!--header-->
 <div th:fragment="header">
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -19,9 +21,9 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/loginPage">로그인</a></li>
-                    <li><a href="/signUpPage">회원가입</a></li>
-                    <li><a href="/logout">로그아웃</a></li>
+                    <li sec:authorize="isAnonymous()"><a href="/loginPage">로그인</a></li>
+                    <li sec:authorize="isAnonymous()"><a href="/signUpPage">회원가입</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="/logout">로그아웃</a></li>
                     <li><a href="/">HOME</a></li>
                 </ul>
             </div>

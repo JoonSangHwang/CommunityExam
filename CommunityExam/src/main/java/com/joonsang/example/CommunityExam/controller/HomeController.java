@@ -2,6 +2,8 @@ package com.joonsang.example.CommunityExam.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class HomeController {
@@ -11,7 +13,7 @@ public class HomeController {
         return "index";
     }
 
-    @GetMapping("/mainPage")
+    @RequestMapping(value = "/mainPage", method= {RequestMethod.GET, RequestMethod.POST})
     public String main() {
         return "main/mainPage";
     }

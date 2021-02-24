@@ -5,6 +5,8 @@ import lombok.Getter;
 @Getter
 public enum roleType {
 
+    BRONZE("Bronze"),
+
     FACEBOOK("facebook"),
     GOOGLE("google"),
     KAKAO("kakao"),
