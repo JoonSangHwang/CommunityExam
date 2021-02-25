@@ -25,6 +25,8 @@ import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -47,6 +49,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AuthenticationDetailsSource customAuthenticationDetailsSource;
+
+    @Autowired
+    private AuthenticationSuccessHandler customFormSuccessHandler;          // 로그인 성공 후, 핸들러
+
+    @Autowired
+    private AuthenticationFailureHandler customFormFailureHandler;          // 로그인 실패 후, 핸들러
 
     @Autowired
     AuthenticationProvider customFormProvider;
@@ -114,9 +122,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Form 로그인
                 .formLogin()
                 .loginPage("/loginPage")
-                .loginProcessingUrl("/loginForm")                          // Form 태그의 Action URL
-                .authenticationDetailsSource(customAuthenticationDetailsSource)   // username, password 이외에 추가 파라미터 처리
-                .successForwardUrl("/mainPage")
+                .loginProcessingUrl("/loginForm")                                   // Form 태그의 Action URL
+                .authenticationDetailsSource(customAuthenticationDetailsSource)     // username, password 이외에 추가 파라미터 처리
+                .defaultSuccessUrl("/mainPage")                                     // 인증 성공 시, 이동 URL
+                .successHandler(customFormSuccessHandler)                           // 로그인 성공 후, 핸들러
+//                .successForwardUrl("/mainPage")
 //        .and()
 //                // 로그아웃
 //                .logout()
