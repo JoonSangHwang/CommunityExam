@@ -3,6 +3,7 @@ package com.joonsang.example.CommunityExam.config;
 import com.joonsang.example.CommunityExam.listener.SessionListener;
 import com.joonsang.example.CommunityExam.ouath.resolver.UserArgumentResolver;
 import com.joonsang.example.CommunityExam.security.common.CustomAuthenticationDetailsSource;
+import com.joonsang.example.CommunityExam.security.handler.CustomFormAccessDeniedHandler;
 import com.joonsang.example.CommunityExam.security.provider.CustomFormProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.*;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -66,6 +68,13 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public AuthenticationDetailsSource authenticationDetailsSource() {
         return new CustomAuthenticationDetailsSource();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        CustomFormAccessDeniedHandler customFormAccessDeniedHandler = new CustomFormAccessDeniedHandler();
+        customFormAccessDeniedHandler.setErrorPage("/denied");
+        return customFormAccessDeniedHandler;
     }
 
 

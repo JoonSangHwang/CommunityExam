@@ -2,7 +2,6 @@ package com.joonsang.example.CommunityExam.security.configs;
 
 import com.joonsang.example.CommunityExam.ouath.CustomOAuth2Provider;
 import com.joonsang.example.CommunityExam.ouath.CustomOAuth2UserService;
-import com.joonsang.example.CommunityExam.security.provider.CustomFormProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,20 +18,16 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.*;
-import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -45,10 +40,10 @@ import static com.joonsang.example.CommunityExam.entity.enumType.roleType.*;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private CustomOAuth2UserService customOAuth2UserService;
+    private CustomOAuth2UserService customOAuth2UserService;                // OAuth2.0
 
     @Autowired
-    private AuthenticationDetailsSource customAuthenticationDetailsSource;
+    private AuthenticationDetailsSource customAuthenticationDetailsSource;  // id/pw 외 추가 파라미터를 받기 위한 겍체
 
     @Autowired
     private AuthenticationSuccessHandler customFormSuccessHandler;          // 로그인 성공 후, 핸들러
@@ -57,7 +52,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationFailureHandler customFormFailureHandler;          // 로그인 실패 후, 핸들러
 
     @Autowired
-    AuthenticationProvider customFormProvider;
+    private AccessDeniedHandler customFormAccessDeniedHandler;              // 인가 거부 처리, 핸들러
+
+    @Autowired
+    AuthenticationProvider customFormProvider;                              // 인증 Provider
 
     private static final String[] AUTH_WHITELIST = {
             "/docs/**",
@@ -105,7 +103,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/facebook").hasAuthority(FACEBOOK.getRoleType())
                 .antMatchers("/google").hasAuthority(GOOGLE.getRoleType())
                 .antMatchers("/kakao").hasAuthority(KAKAO.getRoleType())
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+        ;
 
 
         http
@@ -117,9 +116,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .userService(customOAuth2UserService)       // 로그인 성공 후, 후속 조치 UserService 인터페이스 구현체 [리소스 서버에서 받아온 사용자 정보를 핸들링]
 //        .and()
 //                .headers().frameOptions().disable()         // H2-console 화면을 사용하기 위해 해당 옵션은 disable()
-//        .and()
-//                .exceptionHandling()
-//                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+
 //        .and()
                 // Form 로그인
                 .formLogin()
@@ -129,7 +126,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/mainPage")                                     // 인증 성공 시, 이동 URL
                 .successHandler(customFormSuccessHandler)                           // 로그인 성공 후, 핸들러
                 .failureHandler(customFormFailureHandler)                           // 로그인 실패 후, 핸들러
-//                .successForwardUrl("/mainPage")
+        ;
+        http
+                .exceptionHandling()                                                // 예외 핸들러
+                .accessDeniedHandler(customFormAccessDeniedHandler)                 // 인가 거부 처리 (권한을 가지지 않은 사용자가 페이지에 접근)
+//                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
 //        .and()
 //                // 로그아웃
 //                .logout()

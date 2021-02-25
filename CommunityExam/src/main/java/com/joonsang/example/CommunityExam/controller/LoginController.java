@@ -63,5 +63,21 @@ public class LoginController {
     }
 
 
+    /**
+     * 인가 거부
+     */
+    @GetMapping(value="/denied")
+    public String accessDenied(@RequestParam(value = "exception", required = false) String exception, Model model) throws Exception {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account account = (Account) authentication.getPrincipal();
+
+        model.addAttribute("username", account.getUserId());
+        model.addAttribute("exception", exception);
+
+        return "login/accessDenied";
+    }
+
+
 
 }
