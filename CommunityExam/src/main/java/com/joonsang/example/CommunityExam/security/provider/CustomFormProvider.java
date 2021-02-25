@@ -1,6 +1,7 @@
 package com.joonsang.example.CommunityExam.security.provider;
 
 import com.joonsang.example.CommunityExam.security.AccountContext;
+import com.joonsang.example.CommunityExam.security.common.CustomWebAuthenticationDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -47,11 +48,12 @@ public class CustomFormProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Invalid Password");
         }
 
-//        FormWebAuthenticationDetails formWebAuthenticationDetails = (FormWebAuthenticationDetails) authentication.getDetails();
-//        String secretKey = formWebAuthenticationDetails.getSecretKey();
-//        if (secretKey == null || !"secret".equals(secretKey)) {
-//            throw new InsufficientAuthenticationException("Invalid Secret");
-//        }
+        // SecretKey 검증 - details 에 저장 되어 있음
+        CustomWebAuthenticationDetails customWebAuthenticationDetails = (CustomWebAuthenticationDetails) authentication.getDetails();
+        String secretKey = customWebAuthenticationDetails.getSecretKey();
+        if (secretKey == null || !"준상".equals(secretKey)) {
+            throw new InsufficientAuthenticationException("Invalid Secret");
+        }
 
         /*** 위 검증을 다 완료할 경우, Provider 객체는 토큰을 생성한다. ***/
 

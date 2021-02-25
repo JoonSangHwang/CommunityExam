@@ -87,7 +87,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/mainPage").permitAll()           // [페이지] 메인
                 .antMatchers("/loginPage").permitAll()          // [페이지] 로그인
                 .antMatchers("/signUpPage").permitAll()         // [페이지] 회원가입
-                .antMatchers("/signUp").permitAll()         // [페이지] 회원가입
+                .antMatchers("/signUp").permitAll()             // [페이지] 회원가입
+
+                .antMatchers("/loginPage*").permitAll()         // [컨트롤러]
 
                 .antMatchers("/mypage").hasRole("BRONZE")
                 .antMatchers("/messages").hasRole("MANAGER")
@@ -126,6 +128,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationDetailsSource(customAuthenticationDetailsSource)     // username, password 이외에 추가 파라미터 처리
                 .defaultSuccessUrl("/mainPage")                                     // 인증 성공 시, 이동 URL
                 .successHandler(customFormSuccessHandler)                           // 로그인 성공 후, 핸들러
+                .failureHandler(customFormFailureHandler)                           // 로그인 실패 후, 핸들러
 //                .successForwardUrl("/mainPage")
 //        .and()
 //                // 로그아웃

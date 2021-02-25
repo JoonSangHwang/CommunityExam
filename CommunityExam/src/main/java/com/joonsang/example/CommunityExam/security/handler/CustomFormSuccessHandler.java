@@ -41,14 +41,16 @@ public class CustomFormSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         // 기본 타겟
         setDefaultTargetUrl("/mainPage");
 
-        // savedRequest 가 null 이라면, 인가처리 필터(FilterSecurityInterceptor) 에서 Exception 이 발생하지 않았다는 의미
         SavedRequest savedRequest = requestCache.getRequest(request, response);
-        if (savedRequest == null) {
-            redirectStrategy.sendRedirect(request, response, getDefaultTargetUrl());
+        if (savedRequest != null) {
+            // 그 전... 인증 과정에서 Exception 이 발생하였고 재인증 과정에서 성공한 상태, 세션에서 request URL 을 조회하여 리다이렉트
+            String targetUrl = savedRequest.getRedirectUrl();
+            redirectStrategy.sendRedirect(request, response, targetUrl);
         }
 
-        // 그 전... 인증 과정에서 Exception 이 발생하였고 재인증 과정에서 성공한 상태, 세션에서 request URL 을 조회하여 리다이렉트
-        String targetUrl = savedRequest.getRedirectUrl();
-        redirectStrategy.sendRedirect(request, response, targetUrl);
+        // savedRequest 가 null 이라면, 인가처리 필터(FilterSecurityInterceptor) 에서 Exception 이 발생하지 않았다는 의미
+        else {
+            redirectStrategy.sendRedirect(request, response, getDefaultTargetUrl());
+        }
     }
 }
