@@ -1,6 +1,6 @@
-package com.joonsang.example.CommunityExam.security.provider;
+package com.joonsang.example.CommunityExam.security.methodForm.provider;
 
-import com.joonsang.example.CommunityExam.security.AccountContext;
+import com.joonsang.example.CommunityExam.security.common.AccountContext;
 import com.joonsang.example.CommunityExam.security.common.CustomWebAuthenticationDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.transaction.Transactional;
 

@@ -1,9 +1,9 @@
-package com.joonsang.example.CommunityExam.security.service;
+package com.joonsang.example.CommunityExam.security.methodForm.service;
 
 import com.joonsang.example.CommunityExam.entity.Account;
 import com.joonsang.example.CommunityExam.exception.UserIdNotFoundException;
 import com.joonsang.example.CommunityExam.repository.AccountRepository;
-import com.joonsang.example.CommunityExam.security.AccountContext;
+import com.joonsang.example.CommunityExam.security.common.AccountContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

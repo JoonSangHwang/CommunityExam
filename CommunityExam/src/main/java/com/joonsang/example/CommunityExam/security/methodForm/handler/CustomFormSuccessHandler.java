@@ -1,4 +1,4 @@
-package com.joonsang.example.CommunityExam.security.handler;
+package com.joonsang.example.CommunityExam.security.methodForm.handler;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;

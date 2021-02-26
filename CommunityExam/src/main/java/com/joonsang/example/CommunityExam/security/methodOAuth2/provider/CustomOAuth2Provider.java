@@ -1,4 +1,4 @@
-package com.joonsang.example.CommunityExam.ouath;
+package com.joonsang.example.CommunityExam.security.methodOAuth2.provider;
 
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;

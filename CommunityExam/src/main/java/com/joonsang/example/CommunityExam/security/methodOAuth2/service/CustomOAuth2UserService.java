@@ -1,8 +1,8 @@
-package com.joonsang.example.CommunityExam.ouath;
+package com.joonsang.example.CommunityExam.security.methodOAuth2.service;
 
 import com.joonsang.example.CommunityExam.entity.Account;
-import com.joonsang.example.CommunityExam.ouath.dto.OAuthAttributes;
-import com.joonsang.example.CommunityExam.ouath.dto.SessionUser;
+import com.joonsang.example.CommunityExam.security.methodOAuth2.dto.OAuthAttributes;
+import com.joonsang.example.CommunityExam.security.methodOAuth2.dto.SessionUser;
 import com.joonsang.example.CommunityExam.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

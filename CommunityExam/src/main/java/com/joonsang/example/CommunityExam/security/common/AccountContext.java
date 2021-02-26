@@ -1,4 +1,4 @@
-package com.joonsang.example.CommunityExam.security;
+package com.joonsang.example.CommunityExam.security.common;
 
 import com.joonsang.example.CommunityExam.entity.Account;
 import org.springframework.security.core.GrantedAuthority;

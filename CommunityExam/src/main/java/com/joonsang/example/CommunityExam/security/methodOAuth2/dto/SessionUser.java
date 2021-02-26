@@ -1,4 +1,4 @@
-package com.joonsang.example.CommunityExam.ouath.dto;
+package com.joonsang.example.CommunityExam.security.methodOAuth2.dto;
 
 import com.joonsang.example.CommunityExam.entity.Account;
 import lombok.Getter;

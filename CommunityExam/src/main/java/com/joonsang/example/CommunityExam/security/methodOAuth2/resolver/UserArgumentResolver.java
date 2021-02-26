@@ -1,9 +1,9 @@
-package com.joonsang.example.CommunityExam.ouath.resolver;
+package com.joonsang.example.CommunityExam.security.methodOAuth2.resolver;
 
 import com.joonsang.example.CommunityExam.annotation.SocialUser;
 import com.joonsang.example.CommunityExam.entity.Account;
 import com.joonsang.example.CommunityExam.entity.enumType.roleType;
-import com.joonsang.example.CommunityExam.ouath.dto.SessionUser;
+import com.joonsang.example.CommunityExam.security.methodOAuth2.dto.SessionUser;
 import com.joonsang.example.CommunityExam.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
