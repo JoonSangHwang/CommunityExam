@@ -39,11 +39,9 @@ public class SecurityConfig_OAuth2 extends WebSecurityConfigurerAdapter {
                         "/images/**",
                         "/js/**",
                         "/console/**").permitAll()
-//                .antMatchers("/mainPage").permitAll()           // [페이지] 메인
                 .antMatchers("/facebook").hasAuthority(FACEBOOK.getRoleType())
                 .antMatchers("/google").hasAuthority(GOOGLE.getRoleType())
                 .antMatchers("/kakao").hasAuthority(KAKAO.getRoleType())
-//                .anyRequest().authenticated()
         .and()
                 // OAuth 2.0 로그인
                 .oauth2Login()
