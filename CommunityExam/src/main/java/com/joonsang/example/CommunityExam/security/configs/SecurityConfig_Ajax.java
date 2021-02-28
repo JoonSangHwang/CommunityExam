@@ -35,8 +35,6 @@ public class SecurityConfig_Ajax extends WebSecurityConfigurerAdapter {
     private AuthenticationFailureHandler customAjaxFailureHandler;
 
 
-
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
