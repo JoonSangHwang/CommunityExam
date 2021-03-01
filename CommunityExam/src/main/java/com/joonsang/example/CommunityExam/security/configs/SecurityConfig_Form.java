@@ -96,16 +96,6 @@ public class SecurityConfig_Form extends WebSecurityConfigurerAdapter {
 
 
         http
-//                // OAuth 2.0 로그인
-//                .oauth2Login()
-//                .defaultSuccessUrl("/loginSuccess")         // 로그인 성공 시, 이동 할 URL
-//                .failureUrl("/loginFailure")                // 로그인 실패 시, 이동 할 URL
-//                .userInfoEndpoint()                         // 로그인 성공 후, 로그인 기능에 대한 여러 설정의 진입점
-//                .userService(customOAuth2UserService)       // 로그인 성공 후, 후속 조치 UserService 인터페이스 구현체 [리소스 서버에서 받아온 사용자 정보를 핸들링]
-//        .and()
-//                .headers().frameOptions().disable()         // H2-console 화면을 사용하기 위해 해당 옵션은 disable()
-
-//        .and()
                 // Form 로그인
                 .formLogin()
                 .loginPage("/loginPage")
